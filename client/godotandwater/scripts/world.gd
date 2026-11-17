@@ -36,11 +36,12 @@ func _process(delta: float) -> void:
 				print("Received text: ", response_text)
 				# Optional: Parse JSON response
 				var data = JSON.parse_string(response_text)
-				if data == null or typeof(data) != TYPE_DICTIONARY:
+				print(typeof(data))
+				if data == null or (typeof(data) != TYPE_DICTIONARY):
 					print("Non-Json Message: ", response_text)
 					continue
 				_handle_message(data)
-		var update = {"type" : "UPDATE","position" : player.global_position}
+		var update = {"type" : "UPDATE","x" : player.global_position.x, "y" : player.global_position.y, "z" : player.global_position.z}
 		send_json(update)
 func _handle_message(data : Dictionary) -> void:
 	if not data.has("type"):
