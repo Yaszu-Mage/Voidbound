@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://dvwgvapdt3c2c"]
+
+[ext_resource type="Shader" uid="uid://ckwobl7ho8yjh" path="res://shaders/checker.gdshader" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://35luhyydig34" path="res://scripts/player.gd" id="1_g2els"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mwhv0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3vyb7"]
+render_priority = 0
+shader = ExtResource("1_3vyb7")
+shader_parameter/gridColor = Color(0.19506672, 0.19506672, 0.19506669, 1)
+shader_parameter/checkerColor = Color(1, 1, 1, 1)
+shader_parameter/fadeStart = 0.0
+shader_parameter/fadeEnd = 10.0
+shader_parameter/unitSize = 1.0
+shader_parameter/subdivisions = 5
+shader_parameter/majorLineThickness = 2.0
+shader_parameter/minorLineThickness = 1.0
+shader_parameter/minorLineAlpha = 0.3
+shader_parameter/centerOffset = Vector3(0, 0, 0)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g2els"]
+material = SubResource("ShaderMaterial_3vyb7")
+size = Vector2(100, 100)
+
+[node name="player" type="CharacterBody3D" unique_id=1705789200]
+script = ExtResource("1_g2els")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=774628492]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+current = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=674868434]
+shape = SubResource("BoxShape3D_mwhv0")
+
+[node name="checker" type="MeshInstance3D" parent="." unique_id=448555297]
+mesh = SubResource("PlaneMesh_g2els")
