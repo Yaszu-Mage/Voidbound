@@ -14,6 +14,9 @@ public class Player {
     private final double maxHealth = 100;
     private boolean isTeleporting = false;
     private boolean isAllowedToTeleport = false;
+    public void setColor(Vector3 color) {
+        this.color = color;
+    }
     /**
      * If a player moves more than this distance in a single tick, they will be considered to be rubberbanding and will be moved back to their previous position.
      */
@@ -25,6 +28,11 @@ public class Player {
         this.uuid = UUID.randomUUID();
     }
 
+    public Player(Vector3 position, Vector3 color, UUID uuid) {
+        this.position = position;
+        this.color = color;
+        this.uuid = uuid;
+    }
     public void move(Vector3 secondaryPosition) {
         if (isLegal(secondaryPosition)) {
             position.set(secondaryPosition);
@@ -46,6 +54,7 @@ public class Player {
 
     public JsonObject  convertToJson() {
         JsonObject json = new JsonObject();
+        json.addProperty("type", "PLAYER-INFORMATION");
         json.addProperty("uuid", uuid.toString());
         json.addProperty("x", position.getX());
         json.addProperty("y", position.getY());

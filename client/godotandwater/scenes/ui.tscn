@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://cv1fwtvtd0bfq"]
+
+[ext_resource type="Script" uid="uid://dxs0vsscoke6h" path="res://scripts/ui.gd" id="1_yev5y"]
+[ext_resource type="Theme" uid="uid://bkqsdm1l3qj2i" path="res://maintheme.tres" id="2_x4jx1"]
+
+[sub_resource type="Theme" id="Theme_xlq6p"]
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_yev5y"]
+number_color = Color(0.9647059, 0, 0, 1)
+symbol_color = Color(0.23344907, 0.47615963, 1, 1)
+function_color = Color(0.9241173, 0.016946837, 0.5688067, 1)
+member_variable_color = Color(0.6305108, 0.3437502, 1, 1)
+
+[node name="UI" type="Control" unique_id=464524579]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_yev5y")
+
+[node name="Window" type="Window" parent="." unique_id=311957716]
+oversampling_override = 1.0
+title = "Code"
+initial_position = 1
+size = Vector2i(256, 300)
+theme = ExtResource("2_x4jx1")
+
+[node name="Control" type="Control" parent="Window" unique_id=1889671632]
+custom_minimum_size = Vector2(256, 300)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Codebox" type="VBoxContainer" parent="Window/Control" unique_id=1402528752]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 299.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Window/Control/Codebox" unique_id=1394877197]
+custom_minimum_size = Vector2(256, 36)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Window/Control/Codebox/Panel" unique_id=1435429393]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/Control/Codebox/Panel/MarginContainer" unique_id=1368516572]
+layout_mode = 2
+
+[node name="file" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/HBoxContainer" unique_id=2126017840]
+layout_mode = 2
+text = "File"
+
+[node name="load" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/HBoxContainer" unique_id=551617122]
+layout_mode = 2
+text = "Load"
+
+[node name="save" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/HBoxContainer" unique_id=1783139400]
+layout_mode = 2
+text = "Save"
+
+[node name="CodeEdit" type="CodeEdit" parent="Window/Control/Codebox" unique_id=1576846372]
+custom_minimum_size = Vector2(256, 270)
+layout_mode = 2
+theme = SubResource("Theme_xlq6p")
+text = "#Hiya so this just GDScript"
+placeholder_text = "func baller():
+	pass"
+backspace_deletes_composite_character_enabled = true
+wrap_mode = 1
+indent_wrapped_lines = true
+syntax_highlighter = SubResource("CodeHighlighter_yev5y")
+highlight_all_occurrences = true
+highlight_current_line = true
+code_completion_enabled = true
+auto_brace_completion_enabled = true
+
+[node name="windowcam" type="Camera2D" parent="Window" unique_id=1491328529]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=689789167]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2008437668]
+layout_mode = 0
+offset_left = -577.0
+offset_top = -323.0
+offset_right = 581.0
+offset_bottom = 325.0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="HBoxContainer" unique_id=331545281]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="HBoxContainer/SubViewportContainer" unique_id=68901021]
+handle_input_locally = false
+render_target_update_mode = 4

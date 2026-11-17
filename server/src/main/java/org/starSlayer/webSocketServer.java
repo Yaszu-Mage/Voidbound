@@ -65,7 +65,7 @@ public class webSocketServer extends WebSocketServer {
                 player.move(newPosition);
                 if (isLegalMove) {
                     JsonObject updateJson = new JsonObject();
-                    updateJson.addProperty("type", "UPDATE");
+                    updateJson.addProperty("type", "SELF-UPDATE");
                     updateJson.addProperty("uuid", player.uuid.toString());
                     updateJson.addProperty("x", player.getPosition().getX());
                     updateJson.addProperty("y", player.getPosition().getY());
@@ -73,7 +73,7 @@ public class webSocketServer extends WebSocketServer {
                     updateJson.add("isLegal", new JsonPrimitive(isLegalMove));
                     conn.send(updateJson.toString());
                 }
-                System.out.println("Player moved to: " + newPosition);
+                System.out.println("Player moved to: " + newPosition.toString());
             }
         }
         JsonObject update = new JsonObject();

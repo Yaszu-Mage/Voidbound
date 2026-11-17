@@ -1,8 +1,9 @@
 extends Node3D
 
 
-@export var websocketUrl = "wss://socket.yaszu.xyz"
+@export var websocketUrl = "ws://localhost:8081"
 
+@export var shell = preload("res://scenes/shellPlayer.tscn")
 var socket = WebSocketPeer.new()
 @onready var player = $player
 
@@ -33,10 +34,9 @@ func _process(delta: float) -> void:
 			var packet := socket.get_packet()
 			if socket.was_string_packet():
 				var response_text := packet.get_string_from_utf8()
-				print("Received text: ", response_text)
+				#print("Received text: ", response_text)
 				# Optional: Parse JSON response
 				var data = JSON.parse_string(response_text)
-				print(typeof(data))
 				if data == null:
 					print("Non-Json Message: ", response_text)
 					continue
@@ -62,9 +62,27 @@ func _handle_message(data : Dictionary) -> void:
 			if data.has("uuid"):
 				player.name = data["uuid"]
 				print("UUID ", data["uuid"])
-		"UPDATE":
+		"SELF-UPDATE":
 			var givenPosition = Vector3(data["x"],data["y"],data["z"])
 			if player.global_position.distance_to(givenPosition) <= 10:
 				return
+			else:
+				player.global_position = givenPosition
+		"UPDATE":
+			var activePlayers = data["players"]
+			_handle_array(activePlayers)
+		"PLAYER-INFORMATION":
+			if player.name == data["uuid"]: return
+			if (self.has_node(data["uuid"])):
+				var playerInstance = self.get_node(data["uuid"])
+				var givenPosition = Vector3(data["x"],data["y"],data["z"])
+				playerInstance.global_position = givenPosition
+			else:
+				var shellInstance = shell.instantiate()
+				shellInstance.name = data["uuid"]
+				add_child(shellInstance)
+				
+			print(data)
+			
 		_:
 			print("Unknown message type: ", data["type"])

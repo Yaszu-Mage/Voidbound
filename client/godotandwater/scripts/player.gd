@@ -4,6 +4,8 @@ extends CharacterBody3D
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 @onready var camera = $cambod/Camera3D
+func _ready() -> void:
+	self.global_position = Vector3(randi_range(0,16),self.global_position.y,randi_range(0,16))
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
