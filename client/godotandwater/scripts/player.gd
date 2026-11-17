@@ -7,6 +7,7 @@ const JUMP_VELOCITY = 4.5
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
+	checker.global_position.y = 0
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	if (Input.is_action_just_pressed("escape")):

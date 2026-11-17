@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://xsb52p2lfal0"]
 
 [ext_resource type="Script" uid="uid://bhp8forotbjwl" path="res://scenes/uneditable.gd" id="1_jrret"]
+[ext_resource type="Script" uid="uid://brnbwcx8dqco5" path="res://scripts/world.gd" id="1_s1xo8"]
 [ext_resource type="PackedScene" uid="uid://dvwgvapdt3c2c" path="res://scenes/player.tscn" id="2_wwxcb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_kcip3"]
@@ -19,6 +20,7 @@ sky = SubResource("Sky_jrret")
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_mwhv0"]
 
 [node name="world" type="Node3D" unique_id=348850465]
+script = ExtResource("1_s1xo8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=305159734]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)

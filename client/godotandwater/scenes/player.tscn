@@ -2,6 +2,20 @@
 
 [ext_resource type="Shader" uid="uid://ckwobl7ho8yjh" path="res://shaders/checker.gdshader" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://35luhyydig34" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="ArrayMesh" uid="uid://glfnrjwyofth" path="res://assets/models/soul.obj" id="2_qhqgy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g4v7s"]
+transparency = 1
+albedo_color = Color(1, 0.07450981, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.07450981, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qhqgy"]
+transparency = 1
+albedo_color = Color(1, 0.07450981, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.07450981, 0, 1)
+emission_energy_multiplier = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mwhv0"]
 
@@ -51,7 +65,14 @@ script = ExtResource("1_g2els")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="cambod" unique_id=774628492]
+visible = false
 current = true
+
+[node name="soul" type="MeshInstance3D" parent="cambod" unique_id=1713123651]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+mesh = ExtResource("2_qhqgy")
+surface_material_override/0 = SubResource("StandardMaterial3D_g4v7s")
+surface_material_override/1 = SubResource("StandardMaterial3D_qhqgy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=674868434]
 shape = SubResource("BoxShape3D_mwhv0")
