@@ -11,6 +11,7 @@ ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 sky_material = SubResource("ProceduralSkyMaterial_kcip3")
 
 [sub_resource type="Environment" id="Environment_wwxcb"]
+background_mode = 1
 sky = SubResource("Sky_jrret")
 
 [sub_resource type="BoxMesh" id="BoxMesh_mwhv0"]
