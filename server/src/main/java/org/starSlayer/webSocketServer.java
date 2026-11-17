@@ -76,11 +76,14 @@ public class webSocketServer extends WebSocketServer {
                 System.out.println("Player moved to: " + newPosition);
             }
         }
+        JsonObject update = new JsonObject();
         JsonArray playersJson = new JsonArray();
         for (Player player : players.values()) {
             playersJson.add(player.convertToJson());
         }
-        conn.send(playersJson.toString());
+        update.addProperty("type", "UPDATE");
+        update.add("players", playersJson);
+        conn.send(update.toString());
     }
 
     @Override
