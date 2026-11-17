@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dxs0vsscoke6h" path="res://scripts/ui.gd" id="1_yev5y"]
 [ext_resource type="Theme" uid="uid://bkqsdm1l3qj2i" path="res://maintheme.tres" id="2_x4jx1"]
+[ext_resource type="Texture2D" uid="uid://cwdumleummx5t" path="res://assets/pictures/star.png" id="3_yev5y"]
 
 [sub_resource type="Theme" id="Theme_xlq6p"]
 
@@ -11,11 +12,25 @@ symbol_color = Color(0.23344907, 0.47615963, 1, 1)
 function_color = Color(0.9241173, 0.016946837, 0.5688067, 1)
 member_variable_color = Color(0.6305108, 0.3437502, 1, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mwhv0"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Curve" id="Curve_mwhv0"]
+_limits = [0.0, 10.0446415, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 10.0446415), 2.5669641, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_ryagu"]
+offsets = PackedFloat32Array(0, 0.42578125, 0.64453125, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)
+
 [node name="UI" type="Control" unique_id=464524579]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_yev5y")
 
 [node name="Window" type="Window" parent="." unique_id=311957716]
@@ -89,17 +104,124 @@ auto_brace_completion_enabled = true
 [node name="windowcam" type="Camera2D" parent="Window" unique_id=1491328529]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=689789167]
+position = Vector2(577, 322)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2008437668]
-layout_mode = 0
-offset_left = -577.0
-offset_top = -323.0
-offset_right = 581.0
-offset_bottom = 325.0
+[node name="Panel" type="Panel" parent="." unique_id=537337753]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mwhv0")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="HBoxContainer" unique_id=331545281]
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Panel" unique_id=1900567120]
+texture_filter = 1
+position = Vector2(578, 320)
+amount = 128
+texture = ExtResource("3_yev5y")
+lifetime = 5.0
+emission_shape = 3
+emission_rect_extents = Vector2(570, 300)
+gravity = Vector2(0, 0)
+initial_velocity_max = 10.0
+angular_velocity_max = 10.0
+orbit_velocity_max = 0.05
+damping_max = 40.0
+angle_max = 25.0
+angle_curve = SubResource("Curve_mwhv0")
+scale_amount_min = 0.3
+color_ramp = SubResource("Gradient_ryagu")
+
+[node name="Begin" type="Button" parent="." unique_id=662145995]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -72.0
+offset_top = -15.5
+offset_right = 72.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Begin Connection"
+
+[node name="Special Address" type="VBoxContainer" parent="." unique_id=1505636778]
+visible = false
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -33.5
+offset_right = 128.0
+offset_bottom = 33.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Special Address" unique_id=403728096]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+text = "Do you have a special address?"
 
-[node name="SubViewport" type="SubViewport" parent="HBoxContainer/SubViewportContainer" unique_id=68901021]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Special Address" unique_id=1194399886]
+layout_mode = 2
+theme_override_constants/separation = 178
+
+[node name="Yes" type="Button" parent="Special Address/HBoxContainer2" unique_id=1454999109]
+layout_mode = 2
+text = "Yes"
+
+[node name="No" type="Button" parent="Special Address/HBoxContainer2" unique_id=1817871849]
+layout_mode = 2
+text = "No"
+
+[node name="Special Address2" type="VBoxContainer" parent="." unique_id=224558537]
+visible = false
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -33.5
+offset_right = 128.0
+offset_bottom = 33.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="Special Address2" unique_id=1211708796]
+layout_mode = 2
+text = "Begin"
+
+[node name="TextEdit" type="TextEdit" parent="Special Address2" unique_id=835345929]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+placeholder_text = "wss://socket.yaszu.xyz"
+caret_blink = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=296544029]
+visible = false
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1705727371]
 handle_input_locally = false
-render_target_update_mode = 4
+size = Vector2i(1152, 648)
+render_target_update_mode = 0

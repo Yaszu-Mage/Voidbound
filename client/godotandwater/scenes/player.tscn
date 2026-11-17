@@ -3,6 +3,7 @@
 [ext_resource type="Shader" uid="uid://ckwobl7ho8yjh" path="res://shaders/checker.gdshader" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://35luhyydig34" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="ArrayMesh" uid="uid://glfnrjwyofth" path="res://assets/models/soul.obj" id="2_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://cwdumleummx5t" path="res://assets/pictures/star.png" id="3_dqkch"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g4v7s"]
 transparency = 1
@@ -18,6 +19,39 @@ emission = Color(1, 0.07450981, 0, 1)
 emission_energy_multiplier = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mwhv0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqkch"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_dqkch")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+texture_filter = 0
+texture_repeat = false
+disable_receive_shadows = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_mwhv0"]
+material = SubResource("StandardMaterial3D_dqkch")
+size = Vector2(0.5, 0.5)
+orientation = 2
+
+[sub_resource type="Curve" id="Curve_fjrip"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 79.03226), 140.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_qlg0r"]
+_limits = [0.1, 20.0, 0.0, 1.0]
+_data = [Vector2(0, 0.1), 0.0, 14.0, 0, 0, Vector2(1, 20), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_dqkch"]
+offsets = PackedFloat32Array(0, 0.42578125, 0.64453125, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)
 
 [sub_resource type="Gradient" id="Gradient_g2els"]
 offsets = PackedFloat32Array(0, 0.30769232, 0.6923077)
@@ -76,6 +110,27 @@ surface_material_override/1 = SubResource("StandardMaterial3D_qhqgy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=674868434 groups=["player"]]
 shape = SubResource("BoxShape3D_mwhv0")
+
+[node name="stars" type="CPUParticles3D" parent="." unique_id=1832276065]
+lifetime = 4.0
+lifetime_randomness = 0.5
+mesh = SubResource("PlaneMesh_mwhv0")
+emission_shape = 6
+emission_ring_axis = Vector3(0, 90, 1)
+emission_ring_height = 0.5
+emission_ring_radius = 10.0
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+gravity = Vector3(0, 4, 0)
+radial_accel_max = 1.0
+damping_max = 0.25
+damping_curve = SubResource("Curve_fjrip")
+angle_min = -10.0
+angle_max = 10.0
+angle_curve = SubResource("Curve_qlg0r")
+scale_amount_min = 0.1
+scale_amount_curve = SubResource("Curve_qlg0r")
+color_ramp = SubResource("Gradient_dqkch")
 
 [node name="checker" type="MeshInstance3D" parent="." unique_id=448555297]
 mesh = SubResource("PlaneMesh_g2els")
