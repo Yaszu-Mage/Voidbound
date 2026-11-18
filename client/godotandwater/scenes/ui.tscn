@@ -152,10 +152,6 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer" unique_id=1368516572]
 layout_mode = 2
 
-[node name="file" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=2126017840]
-layout_mode = 2
-text = "File"
-
 [node name="load" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=551617122]
 layout_mode = 2
 text = "Load"
@@ -351,3 +347,5 @@ fit_content = true
 [node name="notificationHandler" type="AnimationPlayer" parent="." unique_id=476927801]
 libraries/ = SubResource("AnimationLibrary_wm3ai")
 speed_scale = 2.0
+
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1413231865]

@@ -1,7 +1,10 @@
 extends Control
+@onready var code_edit: CodeEdit = $Window/Control/Codebox/CodeEdit
 @onready var window : Window = $Window
 @onready var begin = $Begin
-
+@onready var file_dialog: FileDialog = $FileDialog
+@onready var load: Button = $Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer/load
+@onready var save: Button = $Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer/save
 @onready var specialAddressYes = $"Special Address/HBoxContainer2/Yes"
 @onready var specialAddressNo = $"Special Address/HBoxContainer2/No"
 @onready var beginSpecialAdress = $"Special Address2/Button"
@@ -16,7 +19,34 @@ func _ready() -> void:
 	specialAddressNo.pressed.connect(start)
 	specialAddressYes.pressed.connect(specialAddressQuestion)
 	beginSpecialAdress.pressed.connect(startSpecial)
+	file_dialog.use_native_dialog = true
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	file_dialog.filters = PackedStringArray(["*.txt ; Text Files", "*.gd ; GDScript Files"])
+	file_dialog.file_selected.connect(processFile)
+	load.pressed.connect(openFile)
+	save.pressed.connect(saveFile)
 
+func openFile():
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	file_dialog.popup_centered()
+func saveFile():
+	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_dialog.popup_centered()
+func processFile(path :String) -> void:
+	if file_dialog.file_mode == FileDialog.FILE_MODE_SAVE_FILE:
+		var file := FileAccess.open(path,FileAccess.WRITE)
+		if file:
+			file.store_string(code_edit.text)
+			file.close()
+		else:
+			push_error("FAILED TO SAVE FILE")
+	else:
+		var file = FileAccess.open(path,FileAccess.READ)
+		if file:
+			var content = file.get_as_text()
+			code_edit.text = content
+			file.close()
 func specialAddressQuestion() -> void:
 	specialAddressYes.get_parent().visible = false
 	$"Special Address2".visible = true
