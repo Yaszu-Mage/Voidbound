@@ -18,6 +18,7 @@ func _physics_process(delta: float) -> void:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	move_and_slide()
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 	else:

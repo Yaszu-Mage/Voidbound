@@ -32,6 +32,8 @@ public class webSocketServer extends WebSocketServer {
         BLOCKED.add("OS");
         BLOCKED.add("HTTP");
         BLOCKED.add("FileAccess");
+        BLOCKED.add("System");
+        BLOCKED.add("system");
     }
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {

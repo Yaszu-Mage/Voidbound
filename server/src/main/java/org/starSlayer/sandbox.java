@@ -9,6 +9,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,9 +41,11 @@ public class sandbox {
         this.dockerClient = DockerClientImpl.getInstance(config, httpClient);
     }
 
+    HttpClient httpClient = HttpClient.newHttpClient();
+
     public void runScript(String script, long timeoutSeconds, CompletableFuture<String> future) {
         System.out.println("Running script: " + script);
-
+        HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
         Path tempDir = null;
         String containerId = null;
         StringBuilder output = new StringBuilder();
@@ -133,7 +136,8 @@ public class sandbox {
             if (containerId != null && !KEEP_CONTAINER) {
                 try {
                     dockerClient.removeContainerCmd(containerId).withForce(true).exec();
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             } else if (containerId != null) {
                 System.out.println("KEEP_CONTAINER on, leaving container " + containerId);
             }
@@ -144,12 +148,13 @@ public class sandbox {
                             .forEach(p -> {
                                 try {
                                     Files.deleteIfExists(p);
-                                } catch (IOException ignored) {}
+                                } catch (IOException ignored) {
+                                }
                             });
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
         }
-
         String result = output.toString().replaceAll(
                 "Godot Engine v4\\.7\\.2\\.stable\\.official\\.ed1daf0bf - https://godotengine\\.org\\n\\n", "");
         if (result.length() >= 5000) {

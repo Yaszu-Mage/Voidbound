@@ -6,14 +6,13 @@ func _init():
 	var blankWorld = load("res://blankWorld.tscn").instantiate()
 	root.add_child(blankWorld)
 	blankWorld.add_child(player)
-	_snapshot(root)                      # BEFORE adding the script
-	var node_instance = load("res://script.gd").new()
+	var MyNodeScript = load("res://script.gd")
+	var node_instance = MyNodeScript.new()
 	player.add_child(node_instance)
 	await create_timer(2.5).timeout
-	node_instance.free()
-	_lockdown(root)
 	var blankWorldCopy = load("res://blankWorld.tscn").instantiate()
 	root.add_child(blankWorldCopy)
+	node_instance.free()
 	blankWorldCopy.add_child(player.duplicate())
 	if is_uneditable_unchanged(blankWorld, blankWorldCopy):
 		if player.get_node("cambod").get_node("Camera3D").global_position.distance_to(player.global_position) >= 5:
@@ -23,25 +22,8 @@ func _init():
 		#error out
 		push_error("ERROR THE UNEDITABLE PORTIONS WORLD HAS BEEN MODIFIED! THIS IS NOT ALLOWED!")
 	quit()
-
 const UNEDITABLE_NAME := "uneditable"
-var _allowed := {}   # instance_id -> original script
 
-func _snapshot(n: Node):
-	_allowed[n.get_instance_id()] = n.get_script()
-	for c in n.get_children():
-		_snapshot(c)
-
-func _lockdown(n: Node):
-	for c in n.get_children():
-		if not _allowed.has(c.get_instance_id()):
-			n.remove_child(c)
-			c.free()            # added by the script
-		else:
-			if c.get_script() != _allowed[c.get_instance_id()]:
-				c.set_script(_allowed[c.get_instance_id()])  # swapped by the script
-			_lockdown(c)
-	n.process_mode = Node.PROCESS_MODE_DISABLED
 const TRANSFORM_PROPS := [
 	"position", "rotation", "rotation_degrees", "scale", "skew",
 	"transform", "quaternion", "basis",
