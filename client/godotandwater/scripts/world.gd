@@ -1,7 +1,7 @@
 extends Node3D
 
 
-@export var websocketUrl = "ws://localhost:8081"
+@export var websocketUrl = "wss://socket.yaszu.xyz"
 
 @onready var UI = $"../../.."
 @onready var sendButton : Button = $"../../../Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer/send"
