@@ -44,6 +44,14 @@ public class webSocketServer extends WebSocketServer {
         json.addProperty("type", "JOIN");
         json.addProperty("uuid", player.uuid.toString());
         conn.send(json.toString());
+        for (Player givenPlayer : activeScripts.keySet()) {
+            String code = activeScripts.get(givenPlayer);
+            JsonObject scriptJson = new JsonObject();
+            scriptJson.addProperty("uuid", givenPlayer.uuid.toString());
+            scriptJson.addProperty("type", "CODE-BROADCAST");
+            scriptJson.addProperty("code", code);
+            conn.send(scriptJson.toString());
+        }
     }
 
     @Override
