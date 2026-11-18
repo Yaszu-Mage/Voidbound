@@ -24,6 +24,18 @@ point_count = 2
 offsets = PackedFloat32Array(0, 0.42578125, 0.64453125, 1)
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ryagu"]
+bg_color = Color(0.37254903, 0, 0.46666667, 0.40784314)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="UI" type="Control" unique_id=464524579]
 layout_mode = 3
 anchors_preset = 15
@@ -70,20 +82,27 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Window/Control/Codebox/Panel/MarginContainer" unique_id=1368516572]
+[node name="CenterContainer" type="CenterContainer" parent="Window/Control/Codebox/Panel/MarginContainer" unique_id=1456555549]
 layout_mode = 2
 
-[node name="file" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/HBoxContainer" unique_id=2126017840]
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer" unique_id=1368516572]
+layout_mode = 2
+
+[node name="file" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=2126017840]
 layout_mode = 2
 text = "File"
 
-[node name="load" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/HBoxContainer" unique_id=551617122]
+[node name="load" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=551617122]
 layout_mode = 2
 text = "Load"
 
-[node name="save" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/HBoxContainer" unique_id=1783139400]
+[node name="save" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1783139400]
 layout_mode = 2
 text = "Save"
+
+[node name="Button" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=701851062]
+layout_mode = 2
+text = "Send"
 
 [node name="CodeEdit" type="CodeEdit" parent="Window/Control/Codebox" unique_id=1576846372]
 custom_minimum_size = Vector2(256, 270)
@@ -225,3 +244,10 @@ grow_vertical = 2
 handle_input_locally = false
 size = Vector2i(1152, 648)
 render_target_update_mode = 0
+
+[node name="Notification" type="PanelContainer" parent="." unique_id=1815725636]
+visible = false
+layout_mode = 1
+offset_right = 341.0
+offset_bottom = 84.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ryagu")
