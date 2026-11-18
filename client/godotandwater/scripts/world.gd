@@ -3,7 +3,7 @@ extends Node3D
 
 @export var websocketUrl = "ws://localhost:8081"
 
-
+@onready var UI = $"../../.."
 @onready var sendButton : Button = $"../../../Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer/send"
 @onready var codeEditor : CodeEdit = $"../../../Window/Control/Codebox/CodeEdit"
 @export var shell = preload("res://scenes/shellPlayer.tscn")
@@ -97,5 +97,6 @@ func _handle_message(data : Dictionary) -> void:
 			print(data)
 		"CODE-ERROR":
 			print(data)
+			UI.showNotification("CODE ERROR", data["output"])
 		_:
 			print("Unknown message type: ", data["type"])

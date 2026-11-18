@@ -36,6 +36,58 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="Animation" id="Animation_yev5y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Notification:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-345, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_wm3ai"]
+resource_name = "hideNotification"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Notification:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-309, 0), Vector2(-345, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_gdt2y"]
+resource_name = "showNotification"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Notification:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-345, 0), Vector2(42, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wm3ai"]
+_data = {
+&"RESET": SubResource("Animation_yev5y"),
+&"hideNotification": SubResource("Animation_wm3ai"),
+&"showNotification": SubResource("Animation_gdt2y")
+}
+
 [node name="UI" type="Control" unique_id=464524579]
 layout_mode = 3
 anchors_preset = 15
@@ -251,8 +303,32 @@ size = Vector2i(1152, 648)
 render_target_update_mode = 0
 
 [node name="Notification" type="PanelContainer" parent="." unique_id=1815725636]
-visible = false
 layout_mode = 1
-offset_right = 341.0
+offset_left = -345.0
+offset_right = -4.0
 offset_bottom = 84.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ryagu")
+
+[node name="CenterContainer" type="CenterContainer" parent="Notification" unique_id=750165160]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Notification/CenterContainer" unique_id=262773580]
+layout_mode = 2
+
+[node name="Title" type="RichTextLabel" parent="Notification/CenterContainer/HBoxContainer" unique_id=1026440552]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+text = "Code Error:"
+
+[node name="VBoxContainer" type="HBoxContainer" parent="Notification/CenterContainer/HBoxContainer" unique_id=1893181284]
+layout_mode = 2
+
+[node name="Body" type="RichTextLabel" parent="Notification/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1282820627]
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+text = "ERROR: Result too long."
+fit_content = true
+
+[node name="notificationHandler" type="AnimationPlayer" parent="." unique_id=476927801]
+libraries/ = SubResource("AnimationLibrary_wm3ai")
+speed_scale = 2.0

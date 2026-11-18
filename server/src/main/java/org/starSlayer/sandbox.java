@@ -140,6 +140,10 @@ public class sandbox {
 
         String result = output.toString().replaceAll(
                 "Godot Engine v4\\.7\\.2\\.stable\\.official\\.ed1daf0bf - https://godotengine\\.org\\n\\n", "");
+        if (result.length() >= 5000) {
+            future.complete("ERROR: Result too long.");
+            return;
+        }
         result = truncate(result,5000);
         System.out.println("Final result: " + result);
         if (timedOut && script.contains("process(delta)")) {

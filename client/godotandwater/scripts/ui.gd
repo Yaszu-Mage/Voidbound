@@ -53,3 +53,17 @@ func center_camera_on_control() -> void:
 	# Get the center offset of the Control node
 	var control_center: Vector2 = control_node.global_position + (control_node.size * control_node.scale) / 2.0
 	camera.global_position = control_center
+
+
+
+@onready var notificationTitle : RichTextLabel =  $Notification/CenterContainer/HBoxContainer/Title
+@onready var notificationBody : RichTextLabel = $Notification/CenterContainer/HBoxContainer/VBoxContainer/Body
+@onready var notificationAnimation : AnimationPlayer = $notificationHandler
+func showNotification(title : String, body : String) -> void:
+	$Notification.size = Vector2(341,84)
+	notificationTitle.text = title
+	notificationBody.text = body
+	notificationAnimation.play("showNotification")
+	await get_tree().create_timer(40).timeout
+	notificationAnimation.play("hideNotification")
+	
