@@ -100,7 +100,7 @@ text = "Load"
 layout_mode = 2
 text = "Save"
 
-[node name="Button" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=701851062]
+[node name="send" type="Button" parent="Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=701851062]
 layout_mode = 2
 text = "Send"
 
@@ -108,9 +108,10 @@ text = "Send"
 custom_minimum_size = Vector2(256, 270)
 layout_mode = 2
 theme = SubResource("Theme_xlq6p")
-text = "#Hiya so this just GDScript"
-placeholder_text = "func baller():
-	pass"
+placeholder_text = "extends SceneTree
+
+func _ready():
+	print(\"baller\")"
 backspace_deletes_composite_character_enabled = true
 wrap_mode = 1
 indent_wrapped_lines = true

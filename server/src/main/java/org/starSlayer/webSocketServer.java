@@ -10,6 +10,7 @@ import org.java_websocket.server.WebSocketServer;
 import org.starSlayer.utility.Vector3;
 
 import java.net.InetSocketAddress;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,8 @@ public class webSocketServer extends WebSocketServer {
         BLOCKED.add("get_tree().quit()");
         BLOCKED.add("HTTPClient");
         BLOCKED.add("websocket");
+        BLOCKED.add("OS");
+        BLOCKED.add("HTTP");
     }
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
@@ -82,24 +85,28 @@ public class webSocketServer extends WebSocketServer {
                     updateJson.add("isLegal", new JsonPrimitive(isLegalMove));
                     conn.send(updateJson.toString());
                 }
-                System.out.println("Player moved to: " + newPosition.toString());
+//                System.out.println("Player moved to: " + newPosition.toString());
             }
             case CODE ->  {
                 /**
                  * Figure out who it's from, check if it's safe, check if it can compile
                  */
+
                 Player player = players.get(conn);
                 String code = json.get("code").getAsString();
+                System.out.println("Code received: " + code);
                 if (BLOCKED.stream().anyMatch(code::contains)) {
                     JsonObject errorJson = new JsonObject();
-                    errorJson.addProperty("type", "ERROR");
-                    errorJson.addProperty("message", "Your code contains blocked keywords. (OS,http,websocket, etc.)");
+                    errorJson.addProperty("type", "CODE-OUTPUT");
+                    errorJson.addProperty("output", "Your code contains blocked keywords. (OS,http,websocket, etc.)");
                     conn.send(errorJson.toString());
                     return;
                 }
+                System.out.println("Code is safe to run.");
                 CompletableFuture<String> resultFuture = new CompletableFuture<>();
                 try {
-                    sandbox.runScript(code,5,resultFuture);
+                    System.out.println("Running code: " + code);
+                    sandbox.runScript(code, 20,resultFuture);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -109,6 +116,7 @@ public class webSocketServer extends WebSocketServer {
                    outputJson.addProperty("output", output);
                    conn.send(outputJson.toString());
                 });
+
 
 
 

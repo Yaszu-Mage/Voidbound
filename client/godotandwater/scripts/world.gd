@@ -3,6 +3,9 @@ extends Node3D
 
 @export var websocketUrl = "ws://localhost:8081"
 
+
+@onready var sendButton : Button = $"../../../Window/Control/Codebox/Panel/MarginContainer/CenterContainer/HBoxContainer/send"
+@onready var codeEditor : CodeEdit = $"../../../Window/Control/Codebox/CodeEdit"
 @export var shell = preload("res://scenes/shellPlayer.tscn")
 var socket = WebSocketPeer.new()
 @onready var player = $player
@@ -23,12 +26,17 @@ func _ready() -> void:
 	else:
 		push_error("Unable to connect.")
 		set_process(false)
+	sendButton.pressed.connect(sendCode)
 
+
+func sendCode():
+	var code = codeEditor.text
+	var sentCode = {"type" : "CODE", "code" : code}
+	send_json(sentCode)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	socket.poll()
-	
 	var state := socket.get_ready_state()
 	if state == WebSocketPeer.STATE_OPEN:
 		while socket.get_available_packet_count() > 0:
@@ -48,6 +56,8 @@ func _process(delta: float) -> void:
 						_handle_array(data)
 		var update = {"type" : "UPDATE","x" : player.global_position.x, "y" : player.global_position.y, "z" : player.global_position.z}
 		send_json(update)
+	else:
+		var err = socket.connect_to_url(websocketUrl)
 		
 func _handle_array(data : Array) -> void:
 	for entry in data:
@@ -82,8 +92,8 @@ func _handle_message(data : Dictionary) -> void:
 				var shellInstance = shell.instantiate()
 				shellInstance.name = data["uuid"]
 				add_child(shellInstance)
-				
 			print(data)
-			
+		"CODE-OUTPUT":
+			print(data)
 		_:
 			print("Unknown message type: ", data["type"])
