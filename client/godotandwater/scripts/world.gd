@@ -59,7 +59,8 @@ func _process(delta: float) -> void:
 		var update = {"type" : "UPDATE","x" : player.global_position.x, "y" : player.global_position.y, "z" : player.global_position.z}
 		send_json(update)
 	else:
-		var err = socket.connect_to_url(websocketUrl)
+		if !(state != WebSocketPeer.STATE_CLOSED && state != WebSocketPeer.STATE_CLOSING):
+			var err = socket.connect_to_url(websocketUrl)
 		
 func _handle_array(data : Array) -> void:
 	for entry in data:
