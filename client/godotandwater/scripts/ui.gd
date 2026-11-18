@@ -11,7 +11,7 @@ var worldPreload = preload("res://scenes/baseWorld.tscn")
 func _ready() -> void:
 	print("wtf")
 	window.popup()
-	center_camera_on_control()
+	#center_camera_on_control()
 	begin.pressed.connect(specialAddressAsk)
 	specialAddressNo.pressed.connect(start)
 	specialAddressYes.pressed.connect(specialAddressQuestion)
@@ -46,13 +46,13 @@ func startSpecial() -> void:
 		subviewPort.add_child(worldInstance)
 		$SubViewportContainer.visible = true
 		cleanUp()
-@onready var camera: Camera2D = $Window/windowcam
+#@onready var camera: Camera2D = $Window/windowcam
 @onready var control_node: Control = $Window/Control
 
-func center_camera_on_control() -> void:
-	# Get the center offset of the Control node
-	var control_center: Vector2 = control_node.global_position + (control_node.size * control_node.scale) / 2.0
-	camera.global_position = control_center
+#func center_camera_on_control() -> void:
+	## Get the center offset of the Control node
+	#var control_center: Vector2 = control_node.global_position + (control_node.size * control_node.scale) / 2.0
+	#camera.global_position = control_center
 
 
 

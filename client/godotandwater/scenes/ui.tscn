@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dxs0vsscoke6h" path="res://scripts/ui.gd" id="1_yev5y"]
 [ext_resource type="Theme" uid="uid://bkqsdm1l3qj2i" path="res://maintheme.tres" id="2_x4jx1"]
+[ext_resource type="Script" uid="uid://dtvob67kbv0c5" path="res://scripts/window.gd" id="3_gdt2y"]
 [ext_resource type="Texture2D" uid="uid://cwdumleummx5t" path="res://assets/pictures/star.png" id="3_yev5y"]
 
 [sub_resource type="Theme" id="Theme_xlq6p"]
@@ -98,14 +99,22 @@ grow_vertical = 2
 script = ExtResource("1_yev5y")
 
 [node name="Window" type="Window" parent="." unique_id=311957716]
+transparent_bg = true
+canvas_item_default_texture_filter = 0
 oversampling_override = 1.0
 title = "Code"
 initial_position = 1
-size = Vector2i(256, 300)
+size = Vector2i(300, 381)
+nonclient_area = Rect2i(2, 2, 4, 4)
+transparent = true
+min_size = Vector2i(300, 381)
+content_scale_size = Vector2i(0, 381)
+content_scale_aspect = 4
 theme = ExtResource("2_x4jx1")
+script = ExtResource("3_gdt2y")
 
-[node name="Control" type="Control" parent="Window" unique_id=1889671632]
-custom_minimum_size = Vector2(256, 300)
+[node name="Control" type="Control" parent="Window" unique_id=1547527814]
+custom_minimum_size = Vector2(300, 381)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -116,12 +125,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Codebox" type="VBoxContainer" parent="Window/Control" unique_id=1402528752]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 0
-offset_right = 256.0
-offset_bottom = 299.0
+custom_minimum_size = Vector2(256, 381)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Panel" type="PanelContainer" parent="Window/Control/Codebox" unique_id=1394877197]
 custom_minimum_size = Vector2(256, 36)
@@ -159,6 +171,7 @@ text = "Send"
 [node name="CodeEdit" type="CodeEdit" parent="Window/Control/Codebox" unique_id=1576846372]
 custom_minimum_size = Vector2(256, 270)
 layout_mode = 2
+size_flags_vertical = 3
 theme = SubResource("Theme_xlq6p")
 text = "extends Node
 
@@ -177,7 +190,13 @@ highlight_current_line = true
 code_completion_enabled = true
 auto_brace_completion_enabled = true
 
-[node name="windowcam" type="Camera2D" parent="Window" unique_id=1491328529]
+[node name="Console" type="PanelContainer" parent="Window/Control/Codebox" unique_id=438751913]
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Window/Control/Codebox/Console" unique_id=883701396]
+layout_mode = 2
+text = "Console"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=689789167]
 position = Vector2(577, 322)
