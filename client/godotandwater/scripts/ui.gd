@@ -59,6 +59,7 @@ func startSpecial() -> void:
 @onready var notificationTitle : RichTextLabel =  $Notification/CenterContainer/HBoxContainer/Title
 @onready var notificationBody : RichTextLabel = $Notification/CenterContainer/HBoxContainer/VBoxContainer/Body
 @onready var notificationAnimation : AnimationPlayer = $notificationHandler
+@onready var console = $Window/Control/Codebox/Console/RichTextLabel
 func showNotification(title : String, body : String) -> void:
 	$Notification.size = Vector2(341,84)
 	notificationTitle.text = title
@@ -66,4 +67,5 @@ func showNotification(title : String, body : String) -> void:
 	notificationAnimation.play("showNotification")
 	await get_tree().create_timer(40).timeout
 	notificationAnimation.play("hideNotification")
-	
+func showConsole(value : String) -> void:
+	console.text = value

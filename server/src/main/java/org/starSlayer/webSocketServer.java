@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class webSocketServer extends WebSocketServer {
 
     private final HashMap<WebSocket, Player> players = new HashMap<>();
-
+    private final HashMap<Player, String> activeScripts = new HashMap<>();
     sandbox sandbox = new sandbox();
     public static ArrayList<String> BLOCKED = new ArrayList<>();
 
@@ -92,14 +92,20 @@ public class webSocketServer extends WebSocketServer {
                 /**
                  * Figure out who it's from, check if it's safe, check if it can compile
                  */
-
                 Player player = players.get(conn);
                 String code = json.get("code").getAsString();
                 System.out.println("Code received: " + code);
                 if (BLOCKED.stream().anyMatch(code::contains)) {
                     JsonObject errorJson = new JsonObject();
-                    errorJson.addProperty("type", "CODE-OUTPUT");
+                    errorJson.addProperty("type", "CODE-ERROR");
                     errorJson.addProperty("output", "Your code contains blocked keywords. (OS,http,websocket, etc.)");
+                    conn.send(errorJson.toString());
+                    return;
+                }
+                if (code.contains("uneditable")) {
+                    JsonObject errorJson = new JsonObject();
+                    errorJson.addProperty("type", "CODE-ERROR");
+                    errorJson.addProperty("output", "Your code tried to edit the uneditable.");
                     conn.send(errorJson.toString());
                     return;
                 }
@@ -117,6 +123,19 @@ public class webSocketServer extends WebSocketServer {
                        outputJson.addProperty("type", "CODE-ERROR");
                    } else {
                           outputJson.addProperty("type", "CODE-OUTPUT");
+                          outputJson.addProperty("code", code);
+                          outputJson.addProperty("uuid", player.uuid.toString());
+                          activeScripts.put(player, code);
+                          for (WebSocket connection : players.keySet()) {
+                              if (players.get(connection).equals(player)) {
+                                  continue; // Skip the player who sent the code
+                              }
+                              JsonObject broadcastJson = new JsonObject();
+                              broadcastJson.addProperty("type", "CODE-BROADCAST");
+                              broadcastJson.addProperty("uuid", player.uuid.toString());
+                              broadcastJson.addProperty("code", code);
+                              connection.send(broadcastJson.toString());
+                          }
                    }
                    outputJson.addProperty("output", output);
                    conn.send(outputJson.toString());

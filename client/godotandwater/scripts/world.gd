@@ -10,11 +10,13 @@ extends Node3D
 var socket = WebSocketPeer.new()
 @onready var player = $player
 
+
 # Call this function whenever you want to send data
 func send_json(data: Variant) -> void:
 	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 		var json_string := JSON.stringify(data)
 		socket.send_text(json_string)
+	randf_range(0,2.5)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -94,9 +96,28 @@ func _handle_message(data : Dictionary) -> void:
 				add_child(shellInstance)
 			print(data)
 		"CODE-OUTPUT":
-			print(data)
+			UI.showConsole(data["output"])
+			#cool code works
+			print(data["code"])
+			var script : GDScript = create_script_from_string(str(data["code"]))
+			if script:
+				var instance = script.new()
+				instance.name = "script"
+				if (player.has_node("script")):
+					player.get_node("script").queue_free()
+				get_node(data["uuid"]).add_child(instance)
 		"CODE-ERROR":
 			print(data)
 			UI.showNotification("CODE ERROR", data["output"])
 		_:
 			print("Unknown message type: ", data["type"])
+
+
+func create_script_from_string(codeString: String) -> GDScript:
+	var script := GDScript.new()
+	script.source_code = codeString
+	var err := script.reload()
+	if err != OK:
+		UI.showNotification("CODE ERROR", err)
+		return null
+	return script

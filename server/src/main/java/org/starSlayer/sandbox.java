@@ -21,6 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 public class sandbox {
 
+    private static final String IMAGE = "godot:4.7.2";
+
+    // Debug: set -Dsandbox.keep=true (or env SANDBOX_KEEP=1) to leave containers
+    // in place so they show up in Docker Desktop / `docker ps -a`.
+    private static final boolean KEEP_CONTAINER =
+            Boolean.getBoolean("sandbox.keep") || "1".equals(System.getenv("SANDBOX_KEEP"));
+
     private final DockerClient dockerClient;
 
     public sandbox() {
@@ -42,61 +49,63 @@ public class sandbox {
         boolean timedOut = false;
 
         try {
+            try {
+                dockerClient.inspectImageCmd(IMAGE).exec();
+            } catch (Exception e) {
+                throw new IllegalStateException("Docker image '" + IMAGE + "' not found locally. "
+                        + "Build or pull it first (docker images).", e);
+            }
+
             tempDir = Files.createTempDirectory("sandbox");
             Path scriptPath = tempDir.resolve("script.gd");
             Path hostScriptPath = tempDir.resolve("host_script.gd");
+            Path playerScenePath = tempDir.resolve("player.tscn");
+            Path blankWorld = tempDir.resolve("blankWorld.tscn");
 
-            try (InputStream in = sandbox.class.getResourceAsStream("/host_script.gd")) {
-                if (in == null) {
-                    throw new IOException("host_script.gd resource not found");
-                }
-                Files.copy(in, hostScriptPath, StandardCopyOption.REPLACE_EXISTING);
-            }
+            copyResourceFile("/host_script.gd", hostScriptPath);
+            copyResourceFile("/player.tscn", playerScenePath);
+            copyResourceFile("/blankWorld.tscn", blankWorld);
             Files.writeString(scriptPath, script, StandardCharsets.UTF_8);
 
-            tempDir.toFile().setReadable(true, false);
-            tempDir.toFile().setExecutable(true, false);
-            scriptPath.toFile().setReadable(true, false);
-            scriptPath.toFile().setExecutable(true, false);
-            hostScriptPath.toFile().setReadable(true, false);
-            hostScriptPath.toFile().setExecutable(true, false);
+            makeWorldReadable(tempDir);
 
             HostConfig hostConfig = HostConfig.newHostConfig()
                     .withNetworkMode("none")
                     .withReadonlyRootfs(true)
                     .withTmpFs(Map.of("/tmp", "rw,nosuid,size=64m"))
-                    .withMemory(128L * 1024L * 1024L) // 128MB
-                    .withMemorySwap(128L * 1024L * 1024L)
+                    .withMemory(512L * 1024L * 1024L) // 512MB (128MB is too tight for Godot; lower it again once it works)
+                    .withMemorySwap(512L * 1024L * 1024L)
                     .withNanoCPUs(500_000_000L) // 0.5 CPU cores
-                    .withPidsLimit(32L) // no fork bombs
+                    .withPidsLimit(64L) // no fork bombs
                     .withCapDrop(Capability.ALL)
                     .withBinds(
-                            new Bind(
-                                    scriptPath.toAbsolutePath().toString(),
-                                    new Volume("/sandbox/script.gd"),
-                                    AccessMode.ro
-                            ),
-                            new Bind(
-                                    hostScriptPath.toAbsolutePath().toString(),
-                                    new Volume("/sandbox/host_script.gd"),
-                                    AccessMode.ro
-                            )
+                            new Bind(scriptPath.toAbsolutePath().toString(),
+                                    new Volume("/sandbox/script.gd"), AccessMode.ro),
+                            new Bind(hostScriptPath.toAbsolutePath().toString(),
+                                    new Volume("/sandbox/host_script.gd"), AccessMode.ro),
+                            new Bind(playerScenePath.toAbsolutePath().toString(),
+                                    new Volume("/sandbox/player.tscn"), AccessMode.ro),
+                            new Bind(blankWorld.toAbsolutePath().toString(),
+                                    new Volume("/sandbox/blankWorld.tscn"), AccessMode.ro)
                     );
 
-            containerId = dockerClient.createContainerCmd("godot:4.7.2")
+            containerId = dockerClient.createContainerCmd(IMAGE)
                     .withHostConfig(hostConfig)
                     .withEnv("HOME=/tmp", "XDG_DATA_HOME=/tmp", "XDG_CONFIG_HOME=/tmp", "XDG_CACHE_HOME=/tmp")
                     .withCmd("--headless", "--script", "/sandbox/host_script.gd")
                     .exec()
                     .getId();
+            System.out.println("Created container " + containerId);
 
             dockerClient.startContainerCmd(containerId).exec();
 
             try {
-                dockerClient.waitContainerCmd(containerId)
+                Integer exitCode = dockerClient.waitContainerCmd(containerId)
                         .start()
                         .awaitStatusCode(timeoutSeconds, TimeUnit.SECONDS);
+                System.out.println("Container exited with code " + exitCode);
             } catch (Exception e) {
+                System.err.println("Wait failed or timed out: " + e);
                 timedOut = true;
                 try {
                     dockerClient.killContainerCmd(containerId).exec();
@@ -117,15 +126,18 @@ public class sandbox {
                     .awaitCompletion(6, TimeUnit.SECONDS);
 
         } catch (Exception e) {
+            e.printStackTrace(); // don't let failures vanish silently
             future.completeExceptionally(e);
             return;
         } finally {
-            if (containerId != null) {
+            if (containerId != null && !KEEP_CONTAINER) {
                 try {
                     dockerClient.removeContainerCmd(containerId).withForce(true).exec();
                 } catch (Exception ignored) {}
+            } else if (containerId != null) {
+                System.out.println("KEEP_CONTAINER on, leaving container " + containerId);
             }
-            if (tempDir != null) {
+            if (tempDir != null && !KEEP_CONTAINER) {
                 // Delete children first, then the directory itself
                 try (var paths = Files.walk(tempDir)) {
                     paths.sorted(Comparator.reverseOrder())
@@ -144,7 +156,7 @@ public class sandbox {
             future.complete("ERROR: Result too long.");
             return;
         }
-        result = truncate(result,5000);
+        result = truncate(result, 5000);
         System.out.println("Final result: " + result);
         if (timedOut && script.contains("process(delta)")) {
             future.complete(result);
@@ -152,6 +164,29 @@ public class sandbox {
         }
         future.complete(timedOut ? "TIMEOUT\n" + result : result);
     }
+
+    // ---------- resource helpers ----------
+
+    /** Copies a single classpath resource to a file. */
+    private static void copyResourceFile(String resource, Path target) throws IOException {
+        try (InputStream in = sandbox.class.getResourceAsStream(resource)) {
+            if (in == null) {
+                throw new IOException(resource + " resource not found");
+            }
+            Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    /** Makes everything under dir readable (and dirs traversable) by the container user. */
+    private static void makeWorldReadable(Path dir) throws IOException {
+        try (var stream = Files.walk(dir)) {
+            stream.forEach(p -> {
+                p.toFile().setReadable(true, false);
+                p.toFile().setExecutable(true, false);
+            });
+        }
+    }
+
     public static String truncate(String str, int maxLength) {
         if (str == null) {
             return null;

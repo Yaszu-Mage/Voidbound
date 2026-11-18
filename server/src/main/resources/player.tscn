@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bvh23g0bhyjul"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g4v7s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f6dnf"]
+transparency = 1
+albedo_color = Color(1, 0.07450981, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.07450981, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c0x6x"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" unique_id=1904033301]
+
+[node name="cambod" type="Node3D" parent="." unique_id=722280186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="cambod" unique_id=638429589]
+visible = false
+current = true
+
+[node name="soul" type="MeshInstance3D" parent="cambod" unique_id=467808240]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+mesh = SubResource("PlaneMesh_g4v7s")
+surface_material_override/0 = SubResource("StandardMaterial3D_f6dnf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1377122958 groups=["player"]]
+shape = SubResource("BoxShape3D_c0x6x")
