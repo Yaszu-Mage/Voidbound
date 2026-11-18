@@ -24,7 +24,6 @@ public class DockerRunner {
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(workingDir.toFile());
         pb.inheritIO(); // Streams Docker output directly to your Java console
-
         Process process = pb.start();
         int exitCode = process.waitFor();
         if (exitCode != 0) {

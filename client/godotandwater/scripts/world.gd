@@ -9,7 +9,7 @@ extends Node3D
 @export var shell = preload("res://scenes/shellPlayer.tscn")
 var socket = WebSocketPeer.new()
 @onready var player = $player
-
+var pingCounter = 20
 
 # Call this function whenever you want to send data
 func send_json(data: Variant) -> void:
@@ -35,6 +35,8 @@ func sendCode():
 	var code = codeEditor.text
 	var sentCode = {"type" : "CODE", "code" : code}
 	send_json(sentCode)
+	UI.showNotification("CODE STATUS","Sent Code!",0.5)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -57,7 +59,10 @@ func _process(delta: float) -> void:
 					TYPE_ARRAY:
 						_handle_array(data)
 		var update = {"type" : "UPDATE","x" : player.global_position.x, "y" : player.global_position.y, "z" : player.global_position.z}
-		send_json(update)
+		if pingCounter >= 10:
+			send_json(update)
+			pingCounter = 0
+		pingCounter += 1
 	else:
 		if !(state != WebSocketPeer.STATE_CLOSED && state != WebSocketPeer.STATE_CLOSING):
 			var err = socket.connect_to_url(websocketUrl)
@@ -105,11 +110,22 @@ func _handle_message(data : Dictionary) -> void:
 				var instance = script.new()
 				instance.name = "script"
 				if (player.has_node("script")):
-					player.get_node("script").queue_free()
+					player.get_node("script").free()
 				get_node(data["uuid"]).add_child(instance)
 		"CODE-ERROR":
 			print(data)
-			UI.showNotification("CODE ERROR", data["output"])
+			UI.showNotification("CODE ERROR", data["output"],40)
+		"CODE-BROADCAST":
+			pass
+			var script : GDScript = create_script_from_string(str(data["code"]))
+			var uuid : String = str(data["uuid"])
+			if script:
+				var instance = script.new()
+				instance.name = "script"
+				var playerNode : CharacterBody3D = get_node(uuid)
+				if playerNode.has_node("script"):
+					playerNode.get_node("script").free()
+				get_node(data["uuid"]).add_child(instance)
 		_:
 			print("Unknown message type: ", data["type"])
 
@@ -119,6 +135,6 @@ func create_script_from_string(codeString: String) -> GDScript:
 	script.source_code = codeString
 	var err := script.reload()
 	if err != OK:
-		UI.showNotification("CODE ERROR", err)
+		UI.showNotification("CODE ERROR", err,40)
 		return null
 	return script

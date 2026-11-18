@@ -142,10 +142,6 @@ public class webSocketServer extends WebSocketServer {
                    outputJson.addProperty("output", output);
                    conn.send(outputJson.toString());
                 });
-
-
-
-
             }
         }
         JsonObject update = new JsonObject();

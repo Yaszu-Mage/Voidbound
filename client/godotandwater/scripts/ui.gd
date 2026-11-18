@@ -7,7 +7,7 @@ extends Control
 @onready var beginSpecialAdress = $"Special Address2/Button"
 @onready var subviewPort = $SubViewportContainer/SubViewport
 var worldPreload = preload("res://scenes/baseWorld.tscn")
-
+var notificationActive = false
 func _ready() -> void:
 	print("wtf")
 	window.popup()
@@ -60,12 +60,19 @@ func startSpecial() -> void:
 @onready var notificationBody : RichTextLabel = $Notification/CenterContainer/HBoxContainer/VBoxContainer/Body
 @onready var notificationAnimation : AnimationPlayer = $notificationHandler
 @onready var console = $Window/Control/Codebox/Console/RichTextLabel
-func showNotification(title : String, body : String) -> void:
-	$Notification.size = Vector2(341,84)
-	notificationTitle.text = title
-	notificationBody.text = body
-	notificationAnimation.play("showNotification")
-	await get_tree().create_timer(40).timeout
-	notificationAnimation.play("hideNotification")
+func showNotification(title : String, body : String,time : float) -> void:
+	if notificationActive == false:
+		notificationActive = true
+		$Notification.size = Vector2(341,84)
+		notificationTitle.text = title
+		notificationBody.text = body
+		notificationAnimation.play("showNotification")
+		await get_tree().create_timer(time).timeout
+		notificationAnimation.play("hideNotification")
+		await notificationAnimation.animation_finished
+		notificationActive = false
+	else:
+		await get_tree().create_timer(10.0).timeout
+		showNotification(title,body,time)
 func showConsole(value : String) -> void:
 	console.text = value
