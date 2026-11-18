@@ -63,6 +63,8 @@ func startSpecial() -> void:
 func showNotification(title : String, body : String,time : float) -> void:
 	if notificationActive == false:
 		notificationActive = true
+		notificationBody.text = ""
+		notificationTitle.text = ""
 		$Notification.size = Vector2(341,84)
 		notificationTitle.text = title
 		notificationBody.text = body

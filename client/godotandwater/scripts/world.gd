@@ -17,7 +17,6 @@ func send_json(data: Variant) -> void:
 		var json_string := JSON.stringify(data)
 		socket.send_text(json_string)
 	randf_range(0,2.5)
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var err = socket.connect_to_url(websocketUrl)
