@@ -22,10 +22,6 @@ sky = SubResource("Sky_jrret")
 [node name="world" type="Node3D" unique_id=348850465]
 script = ExtResource("1_s1xo8")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=305159734]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
-shadow_enabled = true
-
 [node name="uneditable" type="Node3D" parent="." unique_id=1588834123]
 script = ExtResource("1_jrret")
 
@@ -40,5 +36,9 @@ mesh = SubResource("BoxMesh_mwhv0")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="uneditable/StaticBody3D" unique_id=62766189]
 shape = SubResource("WorldBoundaryShape3D_mwhv0")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="uneditable" unique_id=305159734]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
 
 [node name="player" parent="." unique_id=989034001 instance=ExtResource("2_wwxcb")]

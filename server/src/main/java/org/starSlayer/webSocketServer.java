@@ -10,16 +10,24 @@ import org.java_websocket.server.WebSocketServer;
 import org.starSlayer.utility.Vector3;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class webSocketServer extends WebSocketServer {
 
     private final HashMap<WebSocket, Player> players = new HashMap<>();
 
+    sandbox sandbox = new sandbox();
+    public static ArrayList<String> BLOCKED = new ArrayList<>();
 
 
     public webSocketServer(InetSocketAddress address) {
         super(address);
+        BLOCKED.add("get_tree().quit()");
+        BLOCKED.add("HTTPClient");
+        BLOCKED.add("websocket");
     }
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
@@ -41,7 +49,8 @@ public class webSocketServer extends WebSocketServer {
         UPDATE,
         CHAT,
         PING,
-        JOIN
+        JOIN,
+        CODE
     }
 
     @Override
@@ -74,6 +83,35 @@ public class webSocketServer extends WebSocketServer {
                     conn.send(updateJson.toString());
                 }
                 System.out.println("Player moved to: " + newPosition.toString());
+            }
+            case CODE ->  {
+                /**
+                 * Figure out who it's from, check if it's safe, check if it can compile
+                 */
+                Player player = players.get(conn);
+                String code = json.get("code").getAsString();
+                if (BLOCKED.stream().anyMatch(code::contains)) {
+                    JsonObject errorJson = new JsonObject();
+                    errorJson.addProperty("type", "ERROR");
+                    errorJson.addProperty("message", "Your code contains blocked keywords. (OS,http,websocket, etc.)");
+                    conn.send(errorJson.toString());
+                    return;
+                }
+                CompletableFuture<String> resultFuture = new CompletableFuture<>();
+                try {
+                    sandbox.runScript(code,5,resultFuture);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                resultFuture.thenAccept(output -> {
+                   JsonObject outputJson = new JsonObject();
+                   outputJson.addProperty("type", "CODE-OUTPUT");
+                   outputJson.addProperty("output", output);
+                   conn.send(outputJson.toString());
+                });
+
+
+
             }
         }
         JsonObject update = new JsonObject();
