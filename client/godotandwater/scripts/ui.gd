@@ -12,7 +12,6 @@ extends Control
 var worldPreload = preload("res://scenes/baseWorld.tscn")
 var notificationActive = false
 func _ready() -> void:
-	print("wtf")
 	window.popup()
 	#center_camera_on_control()
 	begin.pressed.connect(specialAddressAsk)
