@@ -31,6 +31,7 @@ public class webSocketServer extends WebSocketServer {
         BLOCKED.add("websocket");
         BLOCKED.add("OS");
         BLOCKED.add("HTTP");
+        BLOCKED.add("FileAccess");
     }
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
@@ -112,7 +113,11 @@ public class webSocketServer extends WebSocketServer {
                 }
                 resultFuture.thenAccept(output -> {
                    JsonObject outputJson = new JsonObject();
-                   outputJson.addProperty("type", "CODE-OUTPUT");
+                   if (output.contains("TIMEOUT") || output.contains("ERROR")) {
+                       outputJson.addProperty("type", "CODE-ERROR");
+                   } else {
+                          outputJson.addProperty("type", "CODE-OUTPUT");
+                   }
                    outputJson.addProperty("output", output);
                    conn.send(outputJson.toString());
                 });

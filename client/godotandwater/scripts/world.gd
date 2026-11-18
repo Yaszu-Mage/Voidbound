@@ -95,5 +95,7 @@ func _handle_message(data : Dictionary) -> void:
 			print(data)
 		"CODE-OUTPUT":
 			print(data)
+		"CODE-ERROR":
+			print(data)
 		_:
 			print("Unknown message type: ", data["type"])

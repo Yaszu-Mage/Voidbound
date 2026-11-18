@@ -108,6 +108,10 @@ text = "Send"
 custom_minimum_size = Vector2(256, 270)
 layout_mode = 2
 theme = SubResource("Theme_xlq6p")
+text = "extends Node
+
+func _ready():
+	print(\"baller\")"
 placeholder_text = "extends SceneTree
 
 func _ready():
