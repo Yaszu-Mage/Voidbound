@@ -24,6 +24,11 @@ application {
     mainClass = 'org.starSlayer.Main'
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.starSlayer.Main'
+    }
+}
 test {
     useJUnitPlatform()
 }
