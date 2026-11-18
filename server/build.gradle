@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'org.starSlayer'
@@ -17,6 +18,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.15.0'
     implementation 'com.github.docker-java:docker-java-core:3.4.0'
     implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.4.0'
+}
+
+application {
+    mainClass = 'org.starSlayer.Main'
 }
 
 test {
