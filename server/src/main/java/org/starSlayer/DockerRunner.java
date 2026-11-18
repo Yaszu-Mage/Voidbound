@@ -11,7 +11,7 @@ public class DockerRunner {
         Path tempDir = Files.createTempDirectory("docker-build-context");
         Path targetDockerfile = tempDir.resolve("Dockerfile");
 
-        try (InputStream in = DockerRunner.class.getResourceAsStream("Dockerfile")) {
+        try (InputStream in = DockerRunner.class.getResourceAsStream("/Dockerfile")) {
             if (in == null) {
                 throw new IOException("Dockerfile resource not found");
             }

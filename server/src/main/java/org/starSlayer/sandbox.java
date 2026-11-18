@@ -65,9 +65,9 @@ public class sandbox {
             Path playerScenePath = tempDir.resolve("player.tscn");
             Path blankWorld = tempDir.resolve("blankWorld.tscn");
 
-            copyResourceFile("host_script.gd", hostScriptPath);
-            copyResourceFile("player.tscn", playerScenePath);
-            copyResourceFile("blankWorld.tscn", blankWorld);
+            copyResourceFile("/host_script.gd", hostScriptPath);
+            copyResourceFile("/player.tscn", playerScenePath);
+            copyResourceFile("/blankWorld.tscn", blankWorld);
             Files.writeString(scriptPath, script, StandardCharsets.UTF_8);
 
             makeWorldReadable(tempDir);
