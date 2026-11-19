@@ -122,9 +122,10 @@ func _handle_message(data : Dictionary) -> void:
 				var instance = script.new()
 				instance.name = "script"
 				var playerNode : CharacterBody3D = get_node(uuid)
-				if playerNode.has_node("script"):
-					playerNode.get_node("script").free()
-				get_node(data["uuid"]).add_child(instance)
+				if playerNode:
+					if playerNode.has_node("script"):
+						playerNode.get_node("script").free()
+					get_node(data["uuid"]).add_child(instance)
 		_:
 			print("Unknown message type: ", data["type"])
 
