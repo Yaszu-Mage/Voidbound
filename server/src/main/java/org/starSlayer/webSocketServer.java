@@ -132,7 +132,7 @@ public class webSocketServer extends WebSocketServer {
                 CompletableFuture<String> resultFuture = new CompletableFuture<>();
                 try {
                     System.out.println("Running code: " + code);
-                    sandbox.runScript(code, 20,resultFuture);
+                    sandbox.runScript(code, 20,resultFuture,conn);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
