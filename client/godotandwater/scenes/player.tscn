@@ -19,6 +19,7 @@ emission = Color(1, 0.07450981, 0, 1)
 emission_energy_multiplier = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mwhv0"]
+size = Vector3(1, 2.161621, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqkch"]
 transparency = 1
@@ -101,6 +102,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 [node name="Camera3D" type="Camera3D" parent="cambod" unique_id=774628492]
 visible = false
 current = true
+far = 100.0
 
 [node name="soul" type="MeshInstance3D" parent="cambod" unique_id=1713123651]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
@@ -109,6 +111,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_g4v7s")
 surface_material_override/1 = SubResource("StandardMaterial3D_qhqgy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=674868434 groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.102067, 0)
 shape = SubResource("BoxShape3D_mwhv0")
 
 [node name="stars" type="CPUParticles3D" parent="." unique_id=1832276065]

@@ -39,9 +39,12 @@ public class Player {
         }
 
     }
-
+    public int worldBorder = 1000;
     public boolean isLegal(Vector3 position) {
         //Check distance from position, if it's above a certain value and no teleport then rubberband
+        if (Math.abs(position.getX()) > worldBorder || Math.abs(position.getY()) > worldBorder || Math.abs(position.getZ()) > worldBorder) {
+            return false;
+        }
         if (isAllowedToTeleport && isTeleporting) {
             return true;
         }

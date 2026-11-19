@@ -10,12 +10,14 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.http.HttpClient;
+import java.net.http.WebSocket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class sandbox {
 
     private static final String IMAGE = "godot:4.7.2";
-
+    public static final HashMap<WebSocket, Boolean> players = new HashMap<>();
     // Debug: set -Dsandbox.keep=true (or env SANDBOX_KEEP=1) to leave containers
     // in place so they show up in Docker Desktop / `docker ps -a`.
     private static final boolean KEEP_CONTAINER =
@@ -43,7 +45,14 @@ public class sandbox {
 
     HttpClient httpClient = HttpClient.newHttpClient();
 
-    public void runScript(String script, long timeoutSeconds, CompletableFuture<String> future) {
+    public void runScript(String script, long timeoutSeconds, CompletableFuture<String> future,WebSocket conn) {
+        if (players.get(conn) == true) {
+            future.complete("ERROR: Already running a script for this player.");
+            return;
+        }
+
+        players.put(conn, true);
+
         System.out.println("Running script: " + script);
         HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
         Path tempDir = null;
@@ -168,6 +177,7 @@ public class sandbox {
             return;
         }
         future.complete(timedOut ? "TIMEOUT\n" + result : result);
+        players.put(conn, false);
     }
 
     // ---------- resource helpers ----------

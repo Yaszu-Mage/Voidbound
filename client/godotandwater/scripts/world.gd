@@ -9,7 +9,7 @@ extends Node3D
 @export var shell = preload("res://scenes/shellPlayer.tscn")
 var socket = WebSocketPeer.new()
 @onready var player = $player
-var pingCounter = 20
+var pingCounter = 5
 
 # Call this function whenever you want to send data
 func send_json(data: Variant) -> void:

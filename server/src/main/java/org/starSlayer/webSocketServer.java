@@ -24,6 +24,7 @@ public class webSocketServer extends WebSocketServer {
     public static ArrayList<String> BLOCKED = new ArrayList<>();
 
 
+
     public webSocketServer(InetSocketAddress address) {
         super(address);
         BLOCKED.add("get_tree().quit()");
