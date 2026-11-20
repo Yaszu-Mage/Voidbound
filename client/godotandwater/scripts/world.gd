@@ -72,6 +72,8 @@ func _handle_array(data : Array) -> void:
 			continue
 		_handle_message(entry)
 
+var players = []
+
 func _handle_message(data : Dictionary) -> void:
 	if not data.has("type"):
 		return
